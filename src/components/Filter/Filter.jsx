@@ -1,21 +1,26 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
-const Filter = ({ filter, handleChange }) => {
+import { changeFilter } from 'Redux/filterSlice';
+import { getFilter } from 'Redux/selectors';
+import { useSelector, useDispatch } from 'react-redux';
+
+const Filter = () => {
+  const value = useSelector(getFilter);
+  const dispatch = useDispatch();
+
+  const onChange = event => {
+    const normalizedValue = event.target.value.toLowerCase();
+
+    dispatch(changeFilter(normalizedValue));
+  };
   return (
-    <>
-      <input
-        type="text"
-        value={filter}
-        onChange={handleChange}
-        placeholder="Search contacts"
-      />
-    </>
+    <input
+      type="text"
+      value={value}
+      onChange={onChange}
+      placeholder="Search contacts"
+    />
   );
 };
 
-Filter.propTypes = {
-  filter: PropTypes.string,
-  handleChange: PropTypes.func,
-};
 export default Filter;

@@ -2,10 +2,19 @@ import React from 'react';
 import { RiContactsFill } from 'react-icons/ri';
 import { AiFillCloseCircle } from 'react-icons/ai';
 import shortid from 'shortid';
-import PropTypes from 'prop-types';
+import { removeContact } from 'Redux/contactsSlice';
+import { getVisibleContacts } from 'Redux/selectors';
+import { useSelector, useDispatch } from 'react-redux';
 import css from './ContactList.module.css';
 
-const ContactList = ({ contacts, onDeleteContact }) => {
+const ContactList = () => {
+  const contacts = useSelector(getVisibleContacts);
+  const dispatch = useDispatch();
+
+  const handleDelete = contactId => {
+    dispatch(removeContact(contactId));
+  };
+
   return (
     <div className={css.container}>
       <ul className={css.contact__ul}>
@@ -15,7 +24,7 @@ const ContactList = ({ contacts, onDeleteContact }) => {
             {contact.name} : {contact.number}{' '}
             <button
               type="button"
-              onClick={() => onDeleteContact(contact.id)}
+              onClick={() => handleDelete(contact.id)}
               className={css.delete__contact}
             >
               <span className={css.icon__close}>
@@ -27,17 +36,6 @@ const ContactList = ({ contacts, onDeleteContact }) => {
       </ul>
     </div>
   );
-};
-
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-    })
-  ).isRequired,
-  onDeleteContact: PropTypes.func.isRequired,
 };
 
 export default ContactList;
